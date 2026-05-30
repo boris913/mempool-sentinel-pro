@@ -45,21 +45,22 @@ export async function getMempoolStats(): Promise<MempoolStats> {
 }
 
 export async function getMempoolRaw(): Promise<Record<string, { vsize: number; ancestor_vsize: number; fees: { base: number; ancestor: number } }>> {
-  return get("/api/mempool/txids").then(async (txids: string[]) => {
-    const entries: Record<string, any> = {};
-    // On limite à 100 pour éviter de surcharger
-    for (const txid of txids.slice(0, 100)) {
-      try {
-        const tx = await getTransaction(txid);
-        entries[txid] = {
-          vsize: tx.weight / 4,
-          fee: tx.fee,
-          feeRate: tx.fee / (tx.weight / 4),
-        };
-      } catch { /* skip */ }
-    }
-    return entries;
-  });
+  const txids = await get<string[]>("/api/mempool/txids");
+  const entries: Record<string, any> = {};
+  
+  // On limite à 100 pour éviter de surcharger
+  for (const txid of txids.slice(0, 100)) {
+    try {
+      const tx = await getTransaction(txid);
+      entries[txid] = {
+        vsize: tx.weight / 4,
+        fee: tx.fee,
+        feeRate: tx.fee / (tx.weight / 4),
+      };
+    } catch { /* skip */ }
+  }
+  
+  return entries;
 }
 
 // ── Blocks ─────────────────────────────────────────────────────────────────
