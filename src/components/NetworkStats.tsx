@@ -89,7 +89,7 @@ export default function NetworkStats({ difficultyAdjustment, hashrateInfo, price
               <span className="text-xs text-bitcoin-dim">Temps moyen</span>
             </div>
             <p className="font-mono text-lg text-bitcoin-text">
-              {difficultyAdjustment ? formatDuration(difficultyAdjustment.timeAvg) : "—"}
+              {difficultyAdjustment ? formatDuration(difficultyAdjustment.timeAvg / 1000) : "—"}
             </p>
             <p className="text-xs text-bitcoin-dim mt-1">
               {difficultyAdjustment ? `Cible: 10 min` : ""}
